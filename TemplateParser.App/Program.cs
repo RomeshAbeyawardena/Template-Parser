@@ -14,6 +14,13 @@ var config = new ConsoleConfig(new ConfigurationBuilder()
 
 Console.WriteLine(config);
 
+foreach(var (key, value) in config.ValueDictionary)
+{
+    Console.WriteLine("{0}:{1}", key, value);
+}
+
+new Fileprovider()
+
 var templates = TemplateParser.App.TemplateParser.Parse(@"Define:MapProfile
 #BEGIN TEMPLATE#
 using Automapper;

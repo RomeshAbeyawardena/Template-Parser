@@ -4,7 +4,7 @@
       "-d": "KeyValues",
       "-i": "Input",
       "--input": "Input",
-      "--keyValues": "KeyValues",
+      "--key-values": "KeyValues",
       "-o": "OutputFiles",
       "--output": "OutputFiles",
       "-s": "KeyValueSeparator"
