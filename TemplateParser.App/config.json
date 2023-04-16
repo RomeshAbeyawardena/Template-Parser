@@ -1,0 +1,13 @@
+{
+  "Options": {
+    "Commands": {
+      "-d": "KeyValues",
+      "-i": "Input",
+      "--input": "Input",
+      "--keyValues": "KeyValues",
+      "-o": "OutputFiles",
+      "--output": "OutputFiles",
+      "-s": "KeyValueSeparator"
+    }
+  }
+}

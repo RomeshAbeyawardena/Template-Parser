@@ -1,4 +1,19 @@
 ﻿// See https://aka.ms/new-console-template for more information
+
+using Microsoft.Extensions.Configuration;
+using TemplateParser.App;
+
+var cfg = new Config(new ConfigurationBuilder()
+    .AddJsonFile("config.json").Build());
+
+Console.WriteLine(cfg);
+
+var config = new ConsoleConfig(new ConfigurationBuilder()
+    .AddCommandLine(args, cfg.Options?.Commands) .Build());
+
+
+Console.WriteLine(config);
+
 var templates = TemplateParser.App.TemplateParser.Parse(@"Define:MapProfile
 #BEGIN TEMPLATE#
 using Automapper;
