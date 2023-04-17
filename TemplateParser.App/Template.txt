@@ -12,7 +12,7 @@ public class MappingProfile : Profile
 }
 #END TEMPLATE#
 
-Path:$feature
+Path:$app
 File:DeleteRequest.cs
 #BEGIN TEMPLATE#
 using Mediatr;
@@ -46,7 +46,7 @@ public record PutRequest : IRequest<Models.$feature>
 }
 #END TEMPLATE#
 
-Path:$feature.Core
+Path:$app.Core
 File:Delete.cs
 #BEGIN TEMPLATE#
 using Mediatr;
@@ -65,9 +65,9 @@ public class Get : RequestHandler<GetRequest, Models.$feature>
 #END TEMPLATE#
 File:MappingProfile
 #BEGIN TEMPLATE#
-##Use:MapProfile
-#Set:$featureNode=$app.Core.Features.$feature; 
-#Set:$CowGoes=Moo
+    ##Use:MapProfile
+        #Set:$featureNode=$app.Core.Features.$feature; 
+        #Set:$CowGoes=Moo
 #END TEMPLATE#
 File:Post.cs
 #BEGIN TEMPLATE#

@@ -8,6 +8,18 @@ public partial record Template
     private bool writingContent = false;
     private readonly IEnumerable<Template> templateItems;
     private readonly StringBuilder contentBuilder;
+
+    private static string ReplaceVariables(string content, IDictionary<string, string> variables)
+    {
+        var templateContent = content;
+        foreach (var (k, v) in variables)
+        {
+            templateContent = templateContent.Replace(k, v);
+        }
+
+        return templateContent;
+    }
+
     public Template(IEnumerable<Template> templateItems)
     {
         this.contentBuilder = new();
@@ -72,13 +84,12 @@ public partial record Template
 
             if (!string.IsNullOrWhiteSpace(UseTemplateName))
             {
-                var templateContent = (templateItems.FirstOrDefault(f => f.TemplateName == UseTemplateName) ?? throw new NullReferenceException("Template not found")).Content ?? throw new NullReferenceException("Template content not set");
-                foreach (var (k, v) in Variables)
-                {
-                    templateContent = templateContent.Replace(k, v);
-                }
+                var templateContent = (templateItems
+                    .FirstOrDefault(f => f.TemplateName == UseTemplateName) 
+                    ?? throw new NullReferenceException("Template not found")).Content 
+                    ?? throw new NullReferenceException("Template content not set");
 
-                contentBuilder.Append(templateContent);
+                contentBuilder.Append(ReplaceVariables(templateContent, Variables));
             }
             Content = contentBuilder.ToString();
             writingContent = false;
@@ -103,7 +114,7 @@ public partial record Template
                 UseTemplateName = line[(line.LastIndexOf(':') + 1)..];
             }
             else
-                contentBuilder.Append(line);
+                contentBuilder.Append(ReplaceVariables(line, Variables));
         }
 
         return isEndOfTemplate;

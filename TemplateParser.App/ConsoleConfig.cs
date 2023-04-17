@@ -13,7 +13,7 @@ public record ConsoleConfig
     public string? KeyValues { get; set; }
     public string? OutputFiles { get; set; }
     public string? KeyValueSeparator { get; set; }
-    public string? Test { get; set; }
+    public bool? Test { get; set; }
     public IDictionary<string, string> ValueDictionary
     {
         get

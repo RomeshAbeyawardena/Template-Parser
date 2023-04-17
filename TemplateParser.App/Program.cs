@@ -26,10 +26,15 @@ Console.WriteLine(AppContext.BaseDirectory);
 if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(directoryName = Path.GetDirectoryName(config.Input)))
 {
     Console.WriteLine(directoryName);
-    if(string.IsNullOrEmpty(directoryName) || directoryName.Equals("."))
+    if(string.IsNullOrEmpty(directoryName))
     {
         directoryName = AppContext.BaseDirectory;
     }
+    else if (directoryName.Equals("."))
+    {
+        directoryName = Environment.CurrentDirectory;
+    }
+
     using var fileProvider = new PhysicalFileProvider(directoryName);
     var file = fileProvider.GetFileInfo(config.Input);
     if (!file.Exists)
@@ -43,8 +48,8 @@ if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(direc
 foreach (var template in templates)
 {
     Console.WriteLine(template);
-    foreach(var (k,v) in template.Variables)
-    {
-        Console.WriteLine("{0}, {1}", k, v);
-    }
+    //foreach(var (k,v) in template.Variables)
+    //{
+    //    Console.WriteLine("{0}, {1}", k, v);
+    //}
 }

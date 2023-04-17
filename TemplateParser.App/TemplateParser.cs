@@ -9,7 +9,7 @@ public static class TemplateParser
         Template? currentTemplate = new(templateList);
         while (!textReader.EndOfStream)
         {
-            var line = textReader.ReadLine();
+            var line = textReader.ReadLine()?.Trim();
 
             if(string.IsNullOrEmpty(line))
             {
