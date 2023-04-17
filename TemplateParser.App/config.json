@@ -7,7 +7,12 @@
       "--key-values": "KeyValues",
       "-o": "OutputFiles",
       "--output": "OutputFiles",
-      "-s": "KeyValueSeparator"
+      "-s": "KeyValueSeparator",
+      "-t": "Test",
+      "--test": "Test"
+    },
+    "Keywords": {
+
     }
   }
 }

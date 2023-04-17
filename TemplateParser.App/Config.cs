@@ -11,13 +11,3 @@ public record Config
 
     public ConsoleOptions? Options { get; set; }
 }
-
-public record ConsoleOptions
-{
-    public ConsoleOptions()
-    {
-        Commands = new Dictionary<string, string>();
-    }
-
-    public IDictionary<string, string> Commands { get; set; }
-}

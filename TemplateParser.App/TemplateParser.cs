@@ -2,18 +2,17 @@
 
 public static class TemplateParser
 {
-    public static IEnumerable<Template> Parse(string template)
+    public static IEnumerable<Template> Parse(Stream stream)
     {
-        bool canRead = true;
-        var textReader = new StringReader(template);
+        using var textReader = new StreamReader(stream);
         var templateList = new List<Template>();
         Template? currentTemplate = new(templateList);
-        while (canRead)
+        while (!textReader.EndOfStream)
         {
             var line = textReader.ReadLine();
-            if (line == null)
+
+            if(string.IsNullOrEmpty(line))
             {
-                canRead = false;
                 continue;
             }
 
@@ -24,5 +23,17 @@ public static class TemplateParser
             }
         }
         return templateList;
+    }
+
+    public static IEnumerable<Template> Parse(string template)
+    {
+        using (var memoryStream = new MemoryStream())
+        {
+            using var streamWriter = new StreamWriter(memoryStream);
+            streamWriter.Write(template);
+            streamWriter.Flush();
+            memoryStream.Position = 0;
+            return Parse(memoryStream);
+        }
     }
 }
