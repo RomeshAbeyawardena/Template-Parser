@@ -3,5 +3,6 @@
 public enum TemplateType
 {
     InMemoryTemplate,
-    FileTemplate
+    FileTemplate,
+    FilePathTemplate
 }

@@ -56,14 +56,13 @@ public partial record DefaultTemplate : ITemplate
         bool isEndOfTemplate = false;
         if (!writingContent && line.StartsWith("Define", StringComparison.InvariantCultureIgnoreCase))
         {
-            //    innerTemplate = new Template() {
             Type = TemplateType.InMemoryTemplate;
-            TemplateName = line[(line.LastIndexOf(":") + 1)..];
-            //    };
+            TemplateName = line[(line.LastIndexOf(":") + 1)..];   
         }
 
         if (!writingContent && line.StartsWith("Path", StringComparison.InvariantCultureIgnoreCase))
         {
+            Type = TemplateType.FilePathTemplate;
             Path = line[(line.LastIndexOf(":") + 1)..];
         }
 
