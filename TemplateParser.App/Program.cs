@@ -41,11 +41,5 @@ if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(direc
     templates = TemplateParserHelper.ParseFromFile(fileProvider, config.Input);
 }
 
-foreach (var template in templates)
-{
-    Console.WriteLine(template);
-    //foreach(var (k,v) in template.Variables)
-    //{
-    //    Console.WriteLine("{0}, {1}", k, v);
-    //}
-}
+var templateExecutor = new DefaultTemplateExecutor(Template.Processors);
+await templateExecutor.Execute(templates, CancellationToken.None);

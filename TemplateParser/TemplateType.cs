@@ -1,8 +1,9 @@
 ﻿namespace TemplateParser;
 
+[Flags]
 public enum TemplateType
 {
-    InMemoryTemplate,
-    FileTemplate,
-    FilePathTemplate
+    InMemoryTemplate = 1,
+    FileTemplate = 2,
+    FilePathTemplate = 4
 }

@@ -2,9 +2,9 @@
 
 namespace TemplateParser.Defaults.Processors.Template;
 
-public class DefaultFilePathProcessor : DefaultFileTemplateProcessor
+public class DefaultFilePathTemplateProcessor : DefaultFileTemplateProcessor
 {
-    public DefaultFilePathProcessor()
+    public DefaultFilePathTemplateProcessor()
     {
         Type = TemplateType.FilePathTemplate;
     }

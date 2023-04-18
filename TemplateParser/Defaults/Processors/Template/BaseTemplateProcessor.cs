@@ -8,7 +8,7 @@ public abstract class BaseTemplateProcessor : ITemplateProcessor
 
     public virtual bool CanProcess(ITemplate template)
     {
-        return Type == template.Type;
+        return Type.HasFlag(template.Type);
     }
 
     public BaseTemplateProcessor(TemplateType type)

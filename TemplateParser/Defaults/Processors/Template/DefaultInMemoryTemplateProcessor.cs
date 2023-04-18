@@ -3,9 +3,9 @@ using TemplateParser.Contracts;
 
 namespace TemplateParser.Defaults.Processors.Template;
 
-public class InMemoryTemplate : BaseTemplateProcessor
+public class DefaultInMemoryTemplateProcessor : BaseTemplateProcessor
 {
-    public InMemoryTemplate() : base(TemplateType.InMemoryTemplate)
+    public DefaultInMemoryTemplateProcessor() : base(TemplateType.InMemoryTemplate)
     {
     }
 

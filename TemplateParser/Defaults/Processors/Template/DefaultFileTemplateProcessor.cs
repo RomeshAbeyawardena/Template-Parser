@@ -10,6 +10,6 @@ public class DefaultFileTemplateProcessor : BaseTemplateProcessor
 
     public override Task Process(ITemplate template, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 }
