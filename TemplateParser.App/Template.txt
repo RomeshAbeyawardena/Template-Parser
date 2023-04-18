@@ -1,3 +1,4 @@
+SET-FILE_LANG:vb
 SET-BASE_PATH:C:\Dev\Test\Crm
 SET-GLOBAL_VAR:app=Crm;lang=vb;Timeout=1000
 Define:MapProfile

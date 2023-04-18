@@ -10,18 +10,8 @@ using TemplateParser.Defaults;
 var cfg = new DefaultConfig(new ConfigurationBuilder()
     .AddJsonFile("config.json").Build());
 
-Console.WriteLine(cfg);
-
 var config = new DefaultConsoleConfig(new ConfigurationBuilder()
     .AddCommandLine(args, cfg.Options?.Commands) .Build());
-
-
-Console.WriteLine(config);
-
-foreach(var (key, value) in config.ValueDictionary)
-{
-    Console.WriteLine("{0}:{1}", key, value);
-}
 
 string? directoryName;
 IEnumerable<ITemplate> templates = Array.Empty<ITemplate>();
