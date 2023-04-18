@@ -27,7 +27,7 @@ public partial record DefaultTemplate : ITemplate
                     var parameterSeparatorIndex = parameter.IndexOf('=');
                     var parameterName = parameter.Substring(0, parameterSeparatorIndex);
                     var parameterValue = parameter.Substring(parameterSeparatorIndex + 1);
-                    globalVariables.AddOrUpdate(parameterName, parameterValue)
+                    globalVariables.AddOrUpdate(parameterName, parameterValue);
                 }
                 break;
         }
