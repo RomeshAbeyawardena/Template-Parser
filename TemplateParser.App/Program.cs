@@ -2,14 +2,15 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
-using TemplateParser.App;
+using TemplateParser.Contracts;
+using TemplateParser.Defaults;
 
-var cfg = new Config(new ConfigurationBuilder()
+var cfg = new DefaultConfig(new ConfigurationBuilder()
     .AddJsonFile("config.json").Build());
 
 Console.WriteLine(cfg);
 
-var config = new ConsoleConfig(new ConfigurationBuilder()
+var config = new DefaultConsoleConfig(new ConfigurationBuilder()
     .AddCommandLine(args, cfg.Options?.Commands) .Build());
 
 
@@ -21,7 +22,7 @@ foreach(var (key, value) in config.ValueDictionary)
 }
 
 string? directoryName;
-IEnumerable<Template> templates = Array.Empty<Template>();
+IEnumerable<ITemplate> templates = Array.Empty<ITemplate>();
 Console.WriteLine(AppContext.BaseDirectory);
 if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(directoryName = Path.GetDirectoryName(config.Input)))
 {
@@ -42,7 +43,7 @@ if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(direc
         return;
     }
     using var readStream = file.CreateReadStream();
-    templates = TemplateParser.App.TemplateParser.Parse(readStream);
+    templates = TemplateParser.TemplateParser.Parse(readStream);
 }
 
 foreach (var template in templates)

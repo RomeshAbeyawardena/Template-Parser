@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateParser.App", "TemplateParser.App\TemplateParser.App.csproj", "{44A2ACFD-4760-4F8D-9FE0-8A408E04A27C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateParser", "TemplateParser\TemplateParser.csproj", "{15467978-4845-4D09-A3DE-AA4E971C49EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{44A2ACFD-4760-4F8D-9FE0-8A408E04A27C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44A2ACFD-4760-4F8D-9FE0-8A408E04A27C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44A2ACFD-4760-4F8D-9FE0-8A408E04A27C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15467978-4845-4D09-A3DE-AA4E971C49EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15467978-4845-4D09-A3DE-AA4E971C49EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15467978-4845-4D09-A3DE-AA4E971C49EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15467978-4845-4D09-A3DE-AA4E971C49EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

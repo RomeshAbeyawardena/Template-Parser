@@ -1,12 +1,13 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using System.Text;
+using TemplateParser.Contracts;
 
-namespace TemplateParser.App;
+namespace TemplateParser.Defaults;
 
-public partial record Template
+public partial record DefaultTemplate : ITemplate
 {
     private bool writingContent = false;
-    private readonly IEnumerable<Template> templateItems;
+    private readonly IEnumerable<ITemplate> templateItems;
     private readonly StringBuilder contentBuilder;
 
     private static string ReplaceVariables(string content, IDictionary<string, string> variables)
@@ -20,14 +21,14 @@ public partial record Template
         return templateContent;
     }
 
-    public Template(IEnumerable<Template> templateItems)
+    public DefaultTemplate(IEnumerable<ITemplate> templateItems)
     {
         this.contentBuilder = new();
         this.templateItems = templateItems;
         Variables = new Dictionary<string, string>();
     }
 
-    public Template(IEnumerable<Template> templateItems, Template? previousTemplate)
+    public DefaultTemplate(IEnumerable<ITemplate> templateItems, ITemplate? previousTemplate)
         : this(templateItems)
     {
         Path = previousTemplate?.Path;
@@ -85,8 +86,8 @@ public partial record Template
             if (!string.IsNullOrWhiteSpace(UseTemplateName))
             {
                 var templateContent = (templateItems
-                    .FirstOrDefault(f => f.TemplateName == UseTemplateName) 
-                    ?? throw new NullReferenceException("Template not found")).Content 
+                    .FirstOrDefault(f => f.TemplateName == UseTemplateName)
+                    ?? throw new NullReferenceException("Template not found")).Content
                     ?? throw new NullReferenceException("Template content not set");
 
                 contentBuilder.Append(ReplaceVariables(templateContent, Variables));

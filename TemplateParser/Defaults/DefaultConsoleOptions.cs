@@ -1,8 +1,8 @@
-﻿namespace TemplateParser.App;
+﻿namespace TemplateParser.Defaults;
 
-public record ConsoleOptions
+public record DefaultConsoleOptions
 {
-    public ConsoleOptions()
+    public DefaultConsoleOptions()
     {
         Commands = new Dictionary<string, string>();
         Keywords = new Dictionary<string, string>();

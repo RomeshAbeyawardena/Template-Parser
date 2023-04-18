@@ -1,17 +1,19 @@
-﻿namespace TemplateParser.App;
+﻿using TemplateParser.Contracts;
 
-public static class TemplateParser
+namespace TemplateParser.Defaults;
+
+public class DefaultTemplateParser : ITemplateParser
 {
-    public static IEnumerable<Template> Parse(Stream stream)
+    public IEnumerable<ITemplate> Parse(Stream stream)
     {
         using var textReader = new StreamReader(stream);
-        var templateList = new List<Template>();
-        Template? currentTemplate = new(templateList);
+        var templateList = new List<ITemplate>();
+        DefaultTemplate? currentTemplate = new(templateList);
         while (!textReader.EndOfStream)
         {
             var line = textReader.ReadLine()?.Trim();
 
-            if(string.IsNullOrEmpty(line))
+            if (string.IsNullOrEmpty(line))
             {
                 continue;
             }
@@ -19,13 +21,13 @@ public static class TemplateParser
             if (currentTemplate.ParseLine(line))
             {
                 templateList.Add(currentTemplate);
-                currentTemplate = new Template(templateList, currentTemplate);
+                currentTemplate = new (templateList, currentTemplate);
             }
         }
         return templateList;
     }
 
-    public static IEnumerable<Template> Parse(string template)
+    public IEnumerable<ITemplate> Parse(string template)
     {
         using (var memoryStream = new MemoryStream())
         {

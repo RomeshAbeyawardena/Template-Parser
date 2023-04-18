@@ -1,4 +1,4 @@
-﻿namespace TemplateParser.App;
+﻿namespace TemplateParser;
 
 public enum TemplateType
 {

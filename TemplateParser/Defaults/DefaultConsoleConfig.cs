@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace TemplateParser.App;
+namespace TemplateParser.Defaults;
 
-public record ConsoleConfig
+public record DefaultConsoleConfig
 {
-    public ConsoleConfig(IConfiguration configuration)
+    public DefaultConsoleConfig(IConfiguration configuration)
     {
         configuration.Bind(this);
     }
