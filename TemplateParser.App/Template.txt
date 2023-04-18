@@ -1,3 +1,5 @@
+SET-BASE_PATH:C:\Dev\Test\Crm
+SET-GLOBAL_VAR:app=Crm;lang=vb;Timeout=1000
 Define:MapProfile
 #BEGIN TEMPLATE#
 using Automapper;

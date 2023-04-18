@@ -4,11 +4,18 @@ namespace TemplateParser.Defaults;
 
 public class DefaultTemplateParser : ITemplateParser
 {
+    private readonly IDictionary<string, string> globalVariables;
+
+    public DefaultTemplateParser(IDictionary<string, string> globalVariables)
+    {
+        this.globalVariables = globalVariables;
+    }
+
     public IEnumerable<ITemplate> Parse(Stream stream)
     {
         using var textReader = new StreamReader(stream);
         var templateList = new List<ITemplate>();
-        DefaultTemplate? currentTemplate = new(templateList);
+        DefaultTemplate? currentTemplate = new(templateList, globalVariables);
         while (!textReader.EndOfStream)
         {
             var line = textReader.ReadLine()?.Trim();
@@ -21,7 +28,7 @@ public class DefaultTemplateParser : ITemplateParser
             if (currentTemplate.ParseLine(line))
             {
                 templateList.Add(currentTemplate);
-                currentTemplate = new (templateList, currentTemplate);
+                currentTemplate = new (templateList, globalVariables, currentTemplate);
             }
         }
         return templateList;

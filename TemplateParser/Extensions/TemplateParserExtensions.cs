@@ -5,7 +5,7 @@ namespace TemplateParser.Extensions;
 
 public static class TemplateParserExtensions
 {
-    public static IEnumerable<ITemplate> ParseFromFile(this ITemplateParser template, IFileProvider fileProvider, string fileName)
+    public static IEnumerable<ITemplate> ParseFromFile(this ITemplateParser templateParser, IFileProvider fileProvider, string fileName)
     {
         var file = fileProvider.GetFileInfo(fileName);
         
@@ -15,6 +15,6 @@ public static class TemplateParserExtensions
         }
         
         using var readStream = file.CreateReadStream();
-        return TemplateParserHelper.Parse(readStream);
+        return TemplateParserHelper.Parse(readStream, templateParser);
     }
 }

@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
+using System.Collections.Concurrent;
 using TemplateParser;
 using TemplateParser.Contracts;
 using TemplateParser.Defaults;
@@ -25,6 +26,7 @@ foreach(var (key, value) in config.ValueDictionary)
 string? directoryName;
 IEnumerable<ITemplate> templates = Array.Empty<ITemplate>();
 Console.WriteLine(AppContext.BaseDirectory);
+var globalVariables = new ConcurrentDictionary<string, string>();
 if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(directoryName = Path.GetDirectoryName(config.Input)))
 {
     Console.WriteLine(directoryName);
@@ -36,10 +38,16 @@ if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(direc
     {
         directoryName = Environment.CurrentDirectory;
     }
-
+    
     using var fileProvider = new PhysicalFileProvider(directoryName);
-    templates = TemplateParserHelper.ParseFromFile(fileProvider, config.Input);
+    templates = TemplateParserHelper.ParseFromFile(fileProvider, config.Input,
+        globalVariables: globalVariables);
 }
 
 var templateExecutor = new DefaultTemplateExecutor(Template.Processors);
 await templateExecutor.Execute(templates, CancellationToken.None);
+
+foreach(var (key, value) in globalVariables)
+{
+    Console.WriteLine("{0}: {1}",key, value);
+}

@@ -6,9 +6,37 @@ namespace TemplateParser.Defaults;
 
 public partial record DefaultTemplate : ITemplate
 {
+    private const string COMMAND_BASE_PATH = "BASE_PATH";
+    private const string COMMAND_GLOBAL_VAR = "GLOBAL_VAR";
     private bool writingContent = false;
     private readonly IEnumerable<ITemplate> templateItems;
+    private readonly IDictionary<string, string> globalVariables;
     private readonly StringBuilder contentBuilder;
+
+    private void ProcessSETCommand(string command, string parameters)
+    {
+        switch (command)
+        {
+            case COMMAND_BASE_PATH:
+                if (!globalVariables.TryAdd(command, parameters))
+                {
+                    globalVariables[command] = parameters;
+                }
+                break;
+            case COMMAND_GLOBAL_VAR:
+                foreach(var parameter in parameters.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                {
+                    var parameterSeparatorIndex = parameter.IndexOf('=');
+                    var parameterName = parameter.Substring(0, parameterSeparatorIndex);
+                    var parameterValue = parameter.Substring(parameterSeparatorIndex + 1);
+                    if (!globalVariables.TryAdd(parameterName, parameterValue))
+                    {
+                        globalVariables[parameterName] = parameterValue;
+                    }
+                }
+                break;
+        }
+    }
 
     private static string ReplaceVariables(string content, IDictionary<string, string> variables)
     {
@@ -21,15 +49,16 @@ public partial record DefaultTemplate : ITemplate
         return templateContent;
     }
 
-    public DefaultTemplate(IEnumerable<ITemplate> templateItems)
+    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables)
     {
         this.contentBuilder = new();
         this.templateItems = templateItems;
+        this.globalVariables = globalVariables;
         Variables = new Dictionary<string, string>();
     }
 
-    public DefaultTemplate(IEnumerable<ITemplate> templateItems, ITemplate? previousTemplate)
-        : this(templateItems)
+    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables, ITemplate? previousTemplate)
+        : this(templateItems, globalVariables)
     {
         Path = previousTemplate?.Path;
         FileName = previousTemplate?.FileName;
@@ -54,13 +83,24 @@ public partial record DefaultTemplate : ITemplate
     public bool ParseLine(string line)
     {
         bool isEndOfTemplate = false;
-        if (!writingContent && line.StartsWith("Define", StringComparison.InvariantCultureIgnoreCase))
+
+        if(!writingContent && line.StartsWith("SET", StringComparison.InvariantCultureIgnoreCase))
+        {
+            var setCommandBody = line[line.LastIndexOf('-')..];
+            var commandSeparatorIndex = setCommandBody.IndexOf(":");
+            var setCommandName = setCommandBody[1..commandSeparatorIndex];
+            var setCommandParameters = setCommandBody[(commandSeparatorIndex + 1)..];
+
+            this.ProcessSETCommand(setCommandName, setCommandParameters);
+        } 
+
+        else if (!writingContent && line.StartsWith("Define", StringComparison.InvariantCultureIgnoreCase))
         {
             Type = TemplateType.InMemoryTemplate;
             TemplateName = line[(line.LastIndexOf(":") + 1)..];   
         }
 
-        if (!writingContent && line.StartsWith("Path", StringComparison.InvariantCultureIgnoreCase))
+        else if (!writingContent && line.StartsWith("Path", StringComparison.InvariantCultureIgnoreCase))
         {
             Type = TemplateType.FilePathTemplate;
             Path = line[(line.LastIndexOf(":") + 1)..];
