@@ -17,6 +17,6 @@ public abstract class BaseTemplateProcessor : ITemplateProcessor
     }
 
     public TemplateType Type { get; protected set; }
-    IDictionary<string, string>? ITemplateProcessor.GlobalVariables { get; set; }
+    public IDictionary<string, string>? GlobalVariables { get; set; }
     TemplateType ITemplateProcessor.Type { get; }
 }

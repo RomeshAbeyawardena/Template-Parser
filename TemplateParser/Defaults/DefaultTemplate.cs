@@ -7,9 +7,6 @@ namespace TemplateParser.Defaults;
 
 public partial record DefaultTemplate : ITemplate
 {
-    private const string COMMAND_FILE_LANGUAGE = "FILE_LANG";
-    private const string COMMAND_BASE_PATH = "BASE_PATH";
-    private const string COMMAND_GLOBAL_VAR = "GLOBAL_VAR";
     private bool writingContent = false;
     private readonly IEnumerable<ITemplate> templateItems;
     private readonly IDictionary<string, string> globalVariables;
@@ -36,17 +33,17 @@ public partial record DefaultTemplate : ITemplate
     {
         switch (command)
         {
-            case COMMAND_FILE_LANGUAGE:
+            case CommandVariables.COMMAND_FILE_LANGUAGE:
                 if (config.Options != null 
                     && config.Options.Languages.TryGetValue(parameters, out var lang))
                 {
                     currentLanguage = lang;
                 }
                 break;
-            case COMMAND_BASE_PATH:
+            case CommandVariables.COMMAND_BASE_PATH:
                 globalVariables.AddOrUpdate(command, parameters);
                 break;
-            case COMMAND_GLOBAL_VAR:
+            case CommandVariables.COMMAND_GLOBAL_VAR:
                 foreach(var parameter in parameters.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                 {
                     var parameterSeparatorIndex = parameter.IndexOf('=');
