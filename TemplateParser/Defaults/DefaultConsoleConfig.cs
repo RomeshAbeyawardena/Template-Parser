@@ -25,7 +25,7 @@ public record DefaultConsoleConfig : IConsoleConfig
                 return dictionary;
             }
 
-            foreach(var keyValue in KeyValues.Split(KeyValueSeparator, StringSplitOptions.RemoveEmptyEntries))
+            foreach(var keyValue in KeyValues.Split(KeyValueSeparator, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
             {
                 var separatorIndex = keyValue.IndexOf('=');
                 dictionary.Add(keyValue[..separatorIndex],
