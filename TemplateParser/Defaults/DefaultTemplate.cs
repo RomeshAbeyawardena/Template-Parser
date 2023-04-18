@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Text;
 using TemplateParser.Contracts;
+using TemplateParser.Extensions;
 
 namespace TemplateParser.Defaults;
 
@@ -18,10 +19,7 @@ public partial record DefaultTemplate : ITemplate
         switch (command)
         {
             case COMMAND_BASE_PATH:
-                if (!globalVariables.TryAdd(command, parameters))
-                {
-                    globalVariables[command] = parameters;
-                }
+                globalVariables.AddOrUpdate(command, parameters);
                 break;
             case COMMAND_GLOBAL_VAR:
                 foreach(var parameter in parameters.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
@@ -29,10 +27,7 @@ public partial record DefaultTemplate : ITemplate
                     var parameterSeparatorIndex = parameter.IndexOf('=');
                     var parameterName = parameter.Substring(0, parameterSeparatorIndex);
                     var parameterValue = parameter.Substring(parameterSeparatorIndex + 1);
-                    if (!globalVariables.TryAdd(parameterName, parameterValue))
-                    {
-                        globalVariables[parameterName] = parameterValue;
-                    }
+                    globalVariables.AddOrUpdate(parameterName, parameterValue)
                 }
                 break;
         }
