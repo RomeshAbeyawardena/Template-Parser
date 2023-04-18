@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TemplateParser.Contracts
+﻿namespace TemplateParser.Contracts
 {
-    internal interface ITemplateExecutor
+    public interface ITemplateExecutor
     {
+        Task Execute(IEnumerable<ITemplate> templates, CancellationToken cancellationToken);
     }
 }
