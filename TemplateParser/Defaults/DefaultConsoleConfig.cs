@@ -15,6 +15,7 @@ public record DefaultConsoleConfig : IConsoleConfig
     public string? OutputFiles { get; set; }
     public string? KeyValueSeparator { get; set; }
     public bool? Test { get; set; }
+
     public IDictionary<string, string> ValueDictionary
     {
         get

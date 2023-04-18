@@ -5,10 +5,13 @@ namespace TemplateParser.Defaults;
 public class DefaultTemplateExecutor : ITemplateExecutor
 {
     private readonly IEnumerable<ITemplateProcessor> templateProcessors;
+    private readonly IDictionary<string, string> globalVariables;
 
-    public DefaultTemplateExecutor(IEnumerable<ITemplateProcessor> templateProcessors)
+    public DefaultTemplateExecutor(IEnumerable<ITemplateProcessor> templateProcessors,
+        IDictionary<string, string> globalVariables)
     {
         this.templateProcessors = templateProcessors;
+        this.globalVariables = globalVariables;
     }
 
     public async Task Execute(IEnumerable<ITemplate> templates, CancellationToken cancellationToken)
@@ -18,6 +21,11 @@ public class DefaultTemplateExecutor : ITemplateExecutor
             var processors = templateProcessors.Where(t => t.CanProcess(template));
             foreach(var processor in processors)
             {
+                if (processor.GlobalVariables != null)
+                {
+                    processor.GlobalVariables = globalVariables;
+                }
+
                 await processor.Process(template, cancellationToken);
             }
         }

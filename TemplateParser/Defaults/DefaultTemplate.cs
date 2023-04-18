@@ -110,7 +110,7 @@ public partial record DefaultTemplate : ITemplate
     {
         bool isEndOfTemplate = false;
 
-        if(!writingContent && line.StartsWith(GetKeywordOrDefault("SET"), StringComparison.InvariantCultureIgnoreCase))
+        if(!writingContent && line.StartsWith(GetKeywordOrDefault(Language.SET_VARIABLE), StringComparison.InvariantCultureIgnoreCase))
         {
             var setCommandBody = line[line.LastIndexOf('-')..];
             var commandSeparatorIndex = setCommandBody.IndexOf(":");
@@ -120,30 +120,30 @@ public partial record DefaultTemplate : ITemplate
             this.ProcessVariable(setCommandName, setCommandParameters);
         } 
 
-        else if (!writingContent && line.StartsWith(GetKeywordOrDefault("DEFINE"), StringComparison.InvariantCultureIgnoreCase))
+        else if (!writingContent && line.StartsWith(GetKeywordOrDefault(Language.DEFINE_TEMPLATE), StringComparison.InvariantCultureIgnoreCase))
         {
             Type = TemplateType.InMemoryTemplate;
             TemplateName = line[(line.LastIndexOf(":") + 1)..];   
         }
 
-        else if (!writingContent && line.StartsWith(GetKeywordOrDefault("PATH"), StringComparison.InvariantCultureIgnoreCase))
+        else if (!writingContent && line.StartsWith(GetKeywordOrDefault(Language.DEFINE_PATH), StringComparison.InvariantCultureIgnoreCase))
         {
             Type = TemplateType.FilePathTemplate;
             Path = line[(line.LastIndexOf(":") + 1)..];
         }
 
-        else if (!writingContent && line.StartsWith(GetKeywordOrDefault("FILE"), StringComparison.InvariantCultureIgnoreCase))
+        else if (!writingContent && line.StartsWith(GetKeywordOrDefault(Language.DEFINE_FILENAME), StringComparison.InvariantCultureIgnoreCase))
         {
             Type = TemplateType.FileTemplate;
             FileName = line[(line.LastIndexOf(":") + 1)..];
         }
 
-        else if (!writingContent && line.StartsWith(GetKeywordOrDefault("#BEGIN TEMPLATE#"), StringComparison.InvariantCultureIgnoreCase))
+        else if (!writingContent && line.StartsWith(GetKeywordOrDefault($"#{Language.START_SEQUENCE} {Language.TEMPLATE_AREA}#"), StringComparison.InvariantCultureIgnoreCase))
         {
             writingContent = true;
         }
 
-        else if (line.EndsWith(GetKeywordOrDefault("#END TEMPLATE#"), StringComparison.InvariantCultureIgnoreCase))
+        else if (line.EndsWith(GetKeywordOrDefault($"#{Language.END_SEQUENCE} {Language.TEMPLATE_AREA}#"), StringComparison.InvariantCultureIgnoreCase))
         {
             var regex = EndTemplateRegex();
             contentBuilder.Append(regex.Replace(line, string.Empty));
@@ -165,7 +165,7 @@ public partial record DefaultTemplate : ITemplate
         {
             if (!string.IsNullOrWhiteSpace(UseTemplateName))
             {
-                if (line.StartsWith(GetKeywordOrDefault("SET", "#"), StringComparison.InvariantCultureIgnoreCase))
+                if (line.StartsWith(GetKeywordOrDefault(Language.SET_VARIABLE, "#"), StringComparison.InvariantCultureIgnoreCase))
                 {
                     var variableDefinition = line[(line.LastIndexOf(':') + 1)..];
 
@@ -175,7 +175,7 @@ public partial record DefaultTemplate : ITemplate
                         variableDefinition[(lastIndex + 1)..]);
                 }
             }
-            else if (line.StartsWith(GetKeywordOrDefault("USE","##"), StringComparison.InvariantCultureIgnoreCase))
+            else if (line.StartsWith(GetKeywordOrDefault(Language.USE_TEMPLATE,"##"), StringComparison.InvariantCultureIgnoreCase))
             {
                 UseTemplateName = line[(line.LastIndexOf(':') + 1)..];
             }
@@ -186,6 +186,6 @@ public partial record DefaultTemplate : ITemplate
         return isEndOfTemplate;
     }
 
-    [GeneratedRegex("(#END TEMPLATE#)")]
+    [GeneratedRegex($"(#{Language.END_SEQUENCE} {Language.TEMPLATE_AREA}#)")]
     private static partial Regex EndTemplateRegex();
 }

@@ -34,10 +34,13 @@ if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(direc
         globalVariables: globalVariables, config: cfg);
 }
 
-var templateExecutor = new DefaultTemplateExecutor(Template.Processors);
-await templateExecutor.Execute(templates, CancellationToken.None);
-
-foreach(var (key, value) in globalVariables)
+if (!config.Test.GetValueOrDefault())
 {
-    Console.WriteLine("{0}: {1}",key, value);
+    var templateExecutor = new DefaultTemplateExecutor(Template.Processors, globalVariables);
+    await templateExecutor.Execute(templates, CancellationToken.None);
+
+    foreach (var (key, value) in globalVariables)
+    {
+        Console.WriteLine("{0}: {1}", key, value);
+    }
 }

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TemplateParser.Contracts;
 
-namespace TemplateParser.Contracts
+public interface IConsoleConfig
 {
-    internal interface IConsoleConfig
-    {
-    }
+    string? Input { get; }
+    string? KeyValues { get; }
+    string? OutputFiles { get; }
+    string? KeyValueSeparator { get; }
+    bool? Test { get; }
+    IDictionary<string, string> ValueDictionary { get; }
 }
