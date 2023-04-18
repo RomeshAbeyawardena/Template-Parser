@@ -38,7 +38,7 @@ public partial record DefaultTemplate : ITemplate
         }
     }
 
-    private static string ReplaceVariables(string content, IDictionary<string, string> variables)
+    private string ReplaceVariables(string content, IDictionary<string, string> variables)
     {
         var templateContent = content;
         foreach (var (k, v) in variables)
@@ -46,6 +46,10 @@ public partial record DefaultTemplate : ITemplate
             templateContent = templateContent.Replace(k, v);
         }
 
+        foreach(var (k,v) in globalVariables)
+        {
+            templateContent = templateContent.Replace($"${k}", v);
+        }
         return templateContent;
     }
 

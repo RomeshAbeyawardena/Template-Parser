@@ -21,6 +21,8 @@ using Mediatr;
 namespace $app.Features.$feature;
 public record DeleteRequest : IRequest<Models.$feature> 
 {
+    public const string Path = $BASE_PATH;
+    public const int Timeout = $Timeout;
 }
 #END TEMPLATE#
 File:GetRequest.cs
