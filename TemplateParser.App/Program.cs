@@ -41,7 +41,7 @@ if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(direc
     
     using var fileProvider = new PhysicalFileProvider(directoryName);
     templates = TemplateParserHelper.ParseFromFile(fileProvider, config.Input,
-        globalVariables: globalVariables);
+        globalVariables: globalVariables, config: cfg);
 }
 
 var templateExecutor = new DefaultTemplateExecutor(Template.Processors);

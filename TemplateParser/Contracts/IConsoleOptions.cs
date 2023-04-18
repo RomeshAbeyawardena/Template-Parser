@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace TemplateParser.Contracts;
 
-namespace TemplateParser.Contracts
+public interface IConsoleOptions
 {
-    internal interface IConsoleOptions
-    {
-    }
+    IDictionary<string, string> Commands { get; set; }
+    IDictionary<string, IDictionary<string, string>> Languages { get; set; }
 }

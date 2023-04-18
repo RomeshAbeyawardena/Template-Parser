@@ -11,4 +11,5 @@ public record DefaultConfig : IConfig
     }
 
     public DefaultConsoleOptions? Options { get; set; }
+    IConsoleOptions? IConfig.Options => Options;
 }

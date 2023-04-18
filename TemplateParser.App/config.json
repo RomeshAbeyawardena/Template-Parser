@@ -11,8 +11,12 @@
       "-t": "Test",
       "--test": "Test"
     },
-    "Keywords": {
-
+    "Languages": {
+      "vb": {
+        "TEMPLATE": "CONTENT",
+        "#SET": "#DECLARE",
+        "##USE": "##RENDER"
+      }
     }
   }
 }

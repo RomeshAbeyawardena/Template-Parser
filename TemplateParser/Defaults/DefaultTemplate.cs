@@ -7,6 +7,7 @@ namespace TemplateParser.Defaults;
 
 public partial record DefaultTemplate : ITemplate
 {
+    private const string COMMAND_FILE_LANGUAGE = "FILE_LANG";
     private const string COMMAND_BASE_PATH = "BASE_PATH";
     private const string COMMAND_GLOBAL_VAR = "GLOBAL_VAR";
     private bool writingContent = false;
@@ -14,10 +15,12 @@ public partial record DefaultTemplate : ITemplate
     private readonly IDictionary<string, string> globalVariables;
     private readonly StringBuilder contentBuilder;
 
-    private void ProcessSETCommand(string command, string parameters)
+    private void ProcessVariable(string command, string parameters)
     {
         switch (command)
         {
+            case COMMAND_FILE_LANGUAGE:
+                break;
             case COMMAND_BASE_PATH:
                 globalVariables.AddOrUpdate(command, parameters);
                 break;
@@ -25,8 +28,8 @@ public partial record DefaultTemplate : ITemplate
                 foreach(var parameter in parameters.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                 {
                     var parameterSeparatorIndex = parameter.IndexOf('=');
-                    var parameterName = parameter.Substring(0, parameterSeparatorIndex);
-                    var parameterValue = parameter.Substring(parameterSeparatorIndex + 1);
+                    var parameterName = parameter[..parameterSeparatorIndex];
+                    var parameterValue = parameter[(parameterSeparatorIndex + 1)..];
                     globalVariables.AddOrUpdate(parameterName, parameterValue);
                 }
                 break;
@@ -48,7 +51,7 @@ public partial record DefaultTemplate : ITemplate
         return templateContent;
     }
 
-    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables)
+    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables, IConfig config)
     {
         this.contentBuilder = new();
         this.templateItems = templateItems;
@@ -56,8 +59,8 @@ public partial record DefaultTemplate : ITemplate
         Variables = new Dictionary<string, string>();
     }
 
-    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables, ITemplate? previousTemplate)
-        : this(templateItems, globalVariables)
+    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables, ITemplate? previousTemplate, IConfig config)
+        : this(templateItems, globalVariables, config)
     {
         Path = previousTemplate?.Path;
         FileName = previousTemplate?.FileName;
@@ -90,7 +93,7 @@ public partial record DefaultTemplate : ITemplate
             var setCommandName = setCommandBody[1..commandSeparatorIndex];
             var setCommandParameters = setCommandBody[(commandSeparatorIndex + 1)..];
 
-            this.ProcessSETCommand(setCommandName, setCommandParameters);
+            this.ProcessVariable(setCommandName, setCommandParameters);
         } 
 
         else if (!writingContent && line.StartsWith("Define", StringComparison.InvariantCultureIgnoreCase))
