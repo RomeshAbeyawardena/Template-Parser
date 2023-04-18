@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
+using TemplateParser;
 using TemplateParser.Contracts;
 using TemplateParser.Defaults;
 
@@ -37,13 +38,7 @@ if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(direc
     }
 
     using var fileProvider = new PhysicalFileProvider(directoryName);
-    var file = fileProvider.GetFileInfo(config.Input);
-    if (!file.Exists)
-    {
-        return;
-    }
-    using var readStream = file.CreateReadStream();
-    templates = TemplateParser.TemplateParser.Parse(readStream);
+    templates = TemplateParserHelper.ParseFromFile(fileProvider, config.Input);
 }
 
 foreach (var template in templates)

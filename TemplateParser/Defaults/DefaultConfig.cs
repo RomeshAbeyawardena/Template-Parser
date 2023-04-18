@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
+using TemplateParser.Contracts;
 
 namespace TemplateParser.Defaults;
 
-public record DefaultConfig
+public record DefaultConfig : IConfig
 {
     public DefaultConfig(IConfiguration configuration)
     {

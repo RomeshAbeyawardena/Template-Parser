@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TemplateParser.App": {
+      "commandName": "Project",
+      "commandLineArgs": "-i ./Template.txt"
+    }
+  }
+}

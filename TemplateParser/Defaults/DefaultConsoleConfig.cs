@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
+using TemplateParser.Contracts;
 
 namespace TemplateParser.Defaults;
 
-public record DefaultConsoleConfig
+public record DefaultConsoleConfig : IConsoleConfig
 {
     public DefaultConsoleConfig(IConfiguration configuration)
     {

@@ -1,6 +1,8 @@
-﻿namespace TemplateParser.Defaults;
+﻿using TemplateParser.Contracts;
 
-public record DefaultConsoleOptions
+namespace TemplateParser.Defaults;
+
+public record DefaultConsoleOptions : IConsoleOptions
 {
     public DefaultConsoleOptions()
     {
