@@ -1,5 +1,11 @@
 SET-BASE_PATH:C:\Dev\Test\Crm
 SET-GLOBAL_VAR:app=Crm;lang=vb;Timeout=1000
+
+Define:Test
+#BEGIN TEMPLATE#
+CAKE IS NICE
+#END TEMPLATE#
+
 Define:MapProfile
 #BEGIN TEMPLATE#
 using Automapper;
@@ -72,6 +78,7 @@ File:MappingProfile
     ##Use:MapProfile
         #Set:$featureNode=$app.Core.Features.$feature; 
         #Set:$CowGoes=Moo
+    ##Use:Test
 #END TEMPLATE#
 File:Post.cs
 #BEGIN TEMPLATE#

@@ -8,7 +8,7 @@ public class DefaultFileTemplateProcessor : DefaultFilePathTemplateProcessor
     
     public DefaultFileTemplateProcessor()
     {
-        
+        Type = TemplateType.FileTemplate;
     }
 
     public IFileOperation FileOperation { set =>  fileOperation = value; }
