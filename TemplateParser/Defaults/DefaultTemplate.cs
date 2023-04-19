@@ -78,6 +78,7 @@ public partial record DefaultTemplate : ITemplate
         this.config = config;
         Variables = new Dictionary<string, string>();
         currentLanguage = new Dictionary<string, string>();
+        UsedTemplates = new List<string>();
     }
 
     public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables, ITemplate? previousTemplate, IConfig config)
@@ -88,7 +89,7 @@ public partial record DefaultTemplate : ITemplate
     }
 
     public IDictionary<string, string> Variables { get; set; }
-    public string? UseTemplateName { get; set; }
+    public IList<string> UsedTemplates { get; set; }
     public string? TemplateName { get; set; }
     public string? Path { get; set; }
     public string? FileName { get; set; }
@@ -145,14 +146,17 @@ public partial record DefaultTemplate : ITemplate
             var regex = EndTemplateRegex();
             contentBuilder.Append(regex.Replace(line, string.Empty));
 
-            if (!string.IsNullOrWhiteSpace(UseTemplateName))
+            if (UsedTemplates.Count > 0)
             {
-                var templateContent = (templateItems
-                    .FirstOrDefault(f => f.TemplateName == UseTemplateName)
-                    ?? throw new NullReferenceException("Template not found")).Content
-                    ?? throw new NullReferenceException("Template content not set");
+                foreach (var template in UsedTemplates)
+                {
+                    var templateContent = (templateItems
+                        .FirstOrDefault(f => f.TemplateName == template)
+                        ?? throw new NullReferenceException("Template not found")).Content
+                        ?? throw new NullReferenceException("Template content not set");
 
-                contentBuilder.Append(ReplaceVariables(templateContent, Variables));
+                    contentBuilder.Append(ReplaceVariables(templateContent, Variables));
+                }
             }
             Content = contentBuilder.ToString();
             writingContent = false;
@@ -160,7 +164,7 @@ public partial record DefaultTemplate : ITemplate
         }
         else if (writingContent)
         {
-            if (!string.IsNullOrWhiteSpace(UseTemplateName))
+            if (UsedTemplates.Count > 0)
             {
                 if (line.StartsWith(GetKeywordOrDefault(Language.SET_VARIABLE, "#"), StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -174,7 +178,7 @@ public partial record DefaultTemplate : ITemplate
             }
             else if (line.StartsWith(GetKeywordOrDefault(Language.USE_TEMPLATE,"##"), StringComparison.InvariantCultureIgnoreCase))
             {
-                UseTemplateName = line[(line.LastIndexOf(':') + 1)..];
+                UsedTemplates.Add(line[(line.LastIndexOf(':') + 1)..]);
             }
             else
                 contentBuilder.Append(ReplaceVariables(line, Variables));

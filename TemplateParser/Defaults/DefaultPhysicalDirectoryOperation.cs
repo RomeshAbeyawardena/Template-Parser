@@ -10,7 +10,7 @@ public class DefaultPhysicalDirectoryOperation : DefaultPhysicalFileOperation, I
     public DefaultPhysicalDirectoryOperation(string pathName)
         : this(new DirectoryInfo(pathName))
     {
-           }
+    }
 
     public DefaultPhysicalDirectoryOperation(DirectoryInfo directoryInfo)
     {

@@ -3,7 +3,7 @@
 public interface ITemplate
 {
     IDictionary<string, string> Variables { get; }
-    string? UseTemplateName { get; }
+    IList<string> UsedTemplates { get; set; }
     string? TemplateName { get; }
     string? Path { get; }
     string? FileName { get;}
