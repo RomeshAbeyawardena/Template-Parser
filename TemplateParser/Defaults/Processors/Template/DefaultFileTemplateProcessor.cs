@@ -5,24 +5,35 @@ namespace TemplateParser.Defaults.Processors.Template;
 
 public class DefaultFileTemplateProcessor : BaseTemplateProcessor
 {
-    private readonly IFileProvider fileProvider;
-    private readonly string directory;
-    public DefaultFileTemplateProcessor() : base(TemplateType.FileTemplate)
+    private IFileProvider? fileProvider;
+    private string? directory;
+
+    protected string? TargetDirectory => directory;
+
+    public override void OnGlobalVariablesUpdated(IDictionary<string, string>? globalVariables)
     {
         directory = Environment.CurrentDirectory;
 
-        if (this.GlobalVariables != null
-            && this.GlobalVariables.TryGetValue(CommandVariables.COMMAND_BASE_PATH, out var basePath))
+        if (globalVariables != null
+            && globalVariables.TryGetValue(CommandVariables.COMMAND_BASE_PATH, out var basePath))
         {
             directory = basePath;
         }
 
         fileProvider = new PhysicalFileProvider(directory);
+
+        base.OnGlobalVariablesUpdated(globalVariables);
+    }
+
+    public DefaultFileTemplateProcessor() : base(TemplateType.FileTemplate)
+    {
+        
     }
 
     public override Task Process(ITemplate template, CancellationToken cancellationToken)
     {
-        if (!string.IsNullOrWhiteSpace(template.FileName))
+        if (fileProvider !=null && !string.IsNullOrWhiteSpace(directory) 
+                && !string.IsNullOrWhiteSpace(template.FileName))
         {
             var path = Path.Combine(directory, template.FileName);
             if (!fileProvider.GetFileInfo(template.FileName).Exists

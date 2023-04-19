@@ -12,11 +12,14 @@ public class DefaultFilePathTemplateProcessor : DefaultFileTemplateProcessor
 
     public override Task Process(ITemplate template, CancellationToken cancellationToken)
     {
-        if (!string.IsNullOrWhiteSpace(template.Path) 
-            && !Directory.Exists(template.Path))
+        string fullyQualifiedPath;
+        if (!string.IsNullOrWhiteSpace(TargetDirectory) 
+            && !string.IsNullOrWhiteSpace(template.Path) 
+            && !Directory.Exists(fullyQualifiedPath = Path.Combine(template.Path)))
         {
-            Directory.CreateDirectory(template.Path);
+            Directory.CreateDirectory(fullyQualifiedPath);
         }
+
         return base.Process(template, cancellationToken);
     }
 }
