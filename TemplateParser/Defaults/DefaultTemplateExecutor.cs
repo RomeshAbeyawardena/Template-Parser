@@ -20,6 +20,7 @@ public class DefaultTemplateExecutor : ITemplateExecutor
         {
             templateProcessor.Dispose();
         }
+
         GC.SuppressFinalize(this);
     }
 
@@ -27,7 +28,9 @@ public class DefaultTemplateExecutor : ITemplateExecutor
     {
         foreach(var template in templates) 
         { 
-            var processors = templateProcessors.Where(t => t.CanProcess(template));
+            var processors = templateProcessors
+                .Where(t => t.CanProcess(template))
+                .OrderByDescending(t => t.OrderIndex);
             foreach(var processor in processors)
             {
                 if (processor.GlobalVariables != null)

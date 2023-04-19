@@ -28,11 +28,13 @@ public abstract class BaseTemplateProcessor : ITemplateProcessor
         return Type.HasFlag(template.Type);
     }
 
-    public BaseTemplateProcessor(TemplateType type)
+    public BaseTemplateProcessor(TemplateType type, int orderIndex = int.MinValue)
     {
         Type = type;
+        OrderIndex = orderIndex;
     }
 
+    public int OrderIndex { get; }
     public TemplateType Type { get; protected set; }
     public IDictionary<string, string>? GlobalVariables { get => globalVariables; set => OnGlobalVariablesUpdated(value); }
     TemplateType ITemplateProcessor.Type { get; }
