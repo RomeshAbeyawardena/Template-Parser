@@ -3,46 +3,35 @@ using TemplateParser.Contracts;
 
 namespace TemplateParser.Defaults.Processors.Template;
 
-public class DefaultFileTemplateProcessor : BaseTemplateProcessor
+public class DefaultFileTemplateProcessor : DefaultFilePathTemplateProcessor
 {
     private IFileProvider? fileProvider;
-    private string? directory;
 
-    protected string? TargetDirectory => directory;
-
-    public override void OnGlobalVariablesUpdated(IDictionary<string, string>? globalVariables)
+    protected override void Dispose()
     {
-        directory = Environment.CurrentDirectory;
-
-        if (globalVariables != null
-            && globalVariables.TryGetValue(CommandVariables.COMMAND_BASE_PATH, out var basePath))
-        {
-            directory = basePath;
-        }
-
-        fileProvider = new PhysicalFileProvider(directory);
-
-        base.OnGlobalVariablesUpdated(globalVariables);
+        (fileProvider as IDisposable)?.Dispose();
+        base.Dispose();
     }
 
-    public DefaultFileTemplateProcessor() : base(TemplateType.FileTemplate)
+    public DefaultFileTemplateProcessor()
     {
         
     }
 
-    public override Task Process(ITemplate template, CancellationToken cancellationToken)
+    public override async Task Process(ITemplate template, CancellationToken cancellationToken)
     {
-        if (fileProvider !=null && !string.IsNullOrWhiteSpace(directory) 
+        await base.Process(template, cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(TargetDirectory) 
                 && !string.IsNullOrWhiteSpace(template.FileName))
         {
-            var path = Path.Combine(directory, template.FileName);
+            fileProvider = new PhysicalFileProvider(TargetDirectory);
+            var path = Path.Combine(TargetDirectory, template.FileName);
             if (!fileProvider.GetFileInfo(template.FileName).Exists
                 && !string.IsNullOrWhiteSpace(template.Content))
             {
-                return File.WriteAllTextAsync(path, template.Content, cancellationToken);
+                await File.WriteAllTextAsync(path, template.Content, cancellationToken);
             }
         }
-
-        return Task.CompletedTask;
     }
 }

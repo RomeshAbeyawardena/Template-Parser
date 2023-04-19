@@ -14,6 +14,15 @@ public class DefaultTemplateExecutor : ITemplateExecutor
         this.globalVariables = globalVariables;
     }
 
+    public void Dispose()
+    {
+        foreach(var templateProcessor in templateProcessors)
+        {
+            templateProcessor.Dispose();
+        }
+        GC.SuppressFinalize(this);
+    }
+
     public async Task Execute(IEnumerable<ITemplate> templates, CancellationToken cancellationToken)
     {
         foreach(var template in templates) 

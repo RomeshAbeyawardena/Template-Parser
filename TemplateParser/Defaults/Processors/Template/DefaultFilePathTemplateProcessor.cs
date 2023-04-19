@@ -1,13 +1,30 @@
-﻿using Microsoft.Extensions.FileProviders;
-using TemplateParser.Contracts;
+﻿using TemplateParser.Contracts;
 
 namespace TemplateParser.Defaults.Processors.Template;
 
-public class DefaultFilePathTemplateProcessor : DefaultFileTemplateProcessor
+public class DefaultFilePathTemplateProcessor : BaseTemplateProcessor
 {
-    public DefaultFilePathTemplateProcessor()
+    private string? directory;
+
+    protected string? TargetDirectory => directory;
+
+    protected override void OnGlobalVariablesUpdated(IDictionary<string, string>? globalVariables)
     {
-        Type = TemplateType.FilePathTemplate;
+        directory = Environment.CurrentDirectory;
+
+        if (globalVariables != null
+            && globalVariables.TryGetValue(CommandVariables.COMMAND_BASE_PATH, out var basePath))
+        {
+            directory = basePath;
+        }
+
+        base.OnGlobalVariablesUpdated(globalVariables);
+    }
+
+    public DefaultFilePathTemplateProcessor()
+        : base(TemplateType.FilePathTemplate)
+    {
+
     }
 
     public override Task Process(ITemplate template, CancellationToken cancellationToken)
@@ -18,8 +35,9 @@ public class DefaultFilePathTemplateProcessor : DefaultFileTemplateProcessor
             && !Directory.Exists(fullyQualifiedPath = Path.Combine(template.Path)))
         {
             Directory.CreateDirectory(fullyQualifiedPath);
+            directory = fullyQualifiedPath;
         }
 
-        return base.Process(template, cancellationToken);
+        return Task.CompletedTask;
     }
 }

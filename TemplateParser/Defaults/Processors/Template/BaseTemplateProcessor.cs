@@ -7,7 +7,18 @@ public abstract class BaseTemplateProcessor : ITemplateProcessor
     private IDictionary<string, string>? globalVariables;
     public abstract Task Process(ITemplate template, CancellationToken cancellationToken);
 
-    public virtual void OnGlobalVariablesUpdated(IDictionary<string, string>? globalVariables)
+    protected virtual void Dispose()
+    {
+
+    }
+
+    void IDisposable.Dispose()
+    {
+        Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void OnGlobalVariablesUpdated(IDictionary<string, string>? globalVariables)
     {
         this.globalVariables = globalVariables;
     }

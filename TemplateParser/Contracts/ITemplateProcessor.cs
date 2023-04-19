@@ -1,6 +1,6 @@
 ﻿namespace TemplateParser.Contracts;
 
-public interface ITemplateProcessor
+public interface ITemplateProcessor : IDisposable
 {
     IDictionary<string, string>? GlobalVariables { get; internal set; }
     TemplateType Type { get; }

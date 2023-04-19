@@ -36,7 +36,7 @@ if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(direc
 
 if (!config.Test.GetValueOrDefault())
 {
-    var templateExecutor = new DefaultTemplateExecutor(Template.Processors, globalVariables);
+    using var templateExecutor = new DefaultTemplateExecutor(Template.Processors, globalVariables);
     await templateExecutor.Execute(templates, CancellationToken.None);
 
     foreach (var (key, value) in globalVariables)
