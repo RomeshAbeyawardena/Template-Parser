@@ -5,14 +5,8 @@ namespace TemplateParser.Defaults.Processors.Template;
 
 public class DefaultFileTemplateProcessor : DefaultFilePathTemplateProcessor
 {
-    private IFileProvider? fileProvider;
-
-    protected override void Dispose()
-    {
-        (fileProvider as IDisposable)?.Dispose();
-        base.Dispose();
-    }
-
+    private IFileOperation? fileOperation;
+    
     public DefaultFileTemplateProcessor()
     {
         
@@ -25,12 +19,12 @@ public class DefaultFileTemplateProcessor : DefaultFilePathTemplateProcessor
         if (!string.IsNullOrWhiteSpace(TargetDirectory) 
                 && !string.IsNullOrWhiteSpace(template.FileName))
         {
-            fileProvider = new PhysicalFileProvider(TargetDirectory);
-            var path = Path.Combine(TargetDirectory, template.FileName);
-            if (!fileProvider.GetFileInfo(template.FileName).Exists
+            fileOperation ??= new DefaultPhysicalFileOperation(TargetDirectory, template.FileName);
+            
+            if (!fileOperation.Exists
                 && !string.IsNullOrWhiteSpace(template.Content))
             {
-                await File.WriteAllTextAsync(path, template.Content, cancellationToken);
+                await fileOperation.Create(cancellationToken);
             }
         }
     }

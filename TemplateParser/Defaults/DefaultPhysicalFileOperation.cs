@@ -1,9 +1,23 @@
-﻿using TemplateParser.Contracts;
+﻿using Microsoft.Extensions.FileProviders;
+using TemplateParser.Contracts;
 using IOPath = System.IO.Path;
 namespace TemplateParser.Defaults;
 
 public class DefaultPhysicalFileOperation : IFileOperation
 {
+    private readonly IFileProvider? fileProvider;
+
+    protected virtual void Dispose()
+    {
+        (fileProvider as IDisposable)?.Dispose();
+    }
+
+    void IDisposable.Dispose()
+    {
+        Dispose();
+        GC.SuppressFinalize(this);
+    }
+
     public DefaultPhysicalFileOperation()
     {
         
@@ -21,6 +35,8 @@ public class DefaultPhysicalFileOperation : IFileOperation
         IsFile = fileInfo.Exists;
         Name = fileInfo.Name;
         Path = IOPath.GetDirectoryName(fileInfo.FullName);
+        FullName = IOPath.GetFullPath(fileInfo.FullName);
+        fileProvider = new PhysicalFileProvider(Path ?? throw new NullReferenceException());
     }
 
     public bool Exists { get; protected set; }
@@ -28,6 +44,7 @@ public class DefaultPhysicalFileOperation : IFileOperation
     public string? Name { get; protected set; }
     public string? Path { get; protected set; }
     public virtual string? Content { get; set; }
+    public string? FullName { get; protected set; }
 
     public virtual Task Create(CancellationToken cancellationToken)
     {
@@ -41,6 +58,11 @@ public class DefaultPhysicalFileOperation : IFileOperation
             throw new NullReferenceException();
         }
 
-        return File.WriteAllTextAsync(IOPath.Combine(Path, Name), Content, cancellationToken);
+        if (string.IsNullOrWhiteSpace(FullName))
+        {
+            throw new NullReferenceException();
+        }
+
+        return File.WriteAllTextAsync(FullName, Content, cancellationToken);
     }
 }

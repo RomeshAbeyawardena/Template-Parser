@@ -7,6 +7,7 @@ namespace TemplateParser.Defaults;
 public class DefaultPhysicalDirectoryOperation : DefaultPhysicalFileOperation, IDirectoryOperation
 {
     public DefaultPhysicalDirectoryOperation(string pathName)
+        : this(new DirectoryInfo(pathName))
     {
         
     }

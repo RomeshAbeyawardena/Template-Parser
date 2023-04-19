@@ -1,5 +1,5 @@
 ﻿namespace TemplateParser.Contracts;
-public interface IFileOperation
+public interface IFileOperation : IDisposable
 {
     string? Content { get; set; }
     Task Create(CancellationToken cancellationToken);
@@ -7,4 +7,5 @@ public interface IFileOperation
     bool IsFile { get; }
     string? Name { get; }
     string? Path { get; }
+    string? FullName { get; }
 }
