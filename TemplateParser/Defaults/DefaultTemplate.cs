@@ -16,7 +16,7 @@ public partial record DefaultTemplate : ITemplate
 
     private string GetKeywordOrDefault(string keyWord, string? prepend = null)
     {
-        if(currentLanguage.TryGetValue(keyWord, out var kW))
+        if (currentLanguage.TryGetValue(keyWord, out var kW))
         {
             keyWord = kW;
         }
@@ -34,7 +34,7 @@ public partial record DefaultTemplate : ITemplate
         switch (command)
         {
             case CommandVariables.COMMAND_FILE_LANGUAGE:
-                if (config.Options != null 
+                if (config.Options != null
                     && config.Options.Languages.TryGetValue(parameters, out var lang))
                 {
                     currentLanguage = lang;
@@ -44,7 +44,7 @@ public partial record DefaultTemplate : ITemplate
                 globalVariables.AddOrUpdate(command, parameters);
                 break;
             case CommandVariables.COMMAND_GLOBAL_VAR:
-                foreach(var parameter in parameters.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                foreach (var parameter in parameters.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                 {
                     var parameterSeparatorIndex = parameter.IndexOf('=');
                     var parameterName = parameter[..parameterSeparatorIndex];
@@ -63,7 +63,7 @@ public partial record DefaultTemplate : ITemplate
             templateContent = templateContent.Replace(k, v);
         }
 
-        foreach(var (k,v) in globalVariables)
+        foreach (var (k, v) in globalVariables)
         {
             templateContent = templateContent.Replace($"${k}", v);
         }
@@ -108,7 +108,7 @@ public partial record DefaultTemplate : ITemplate
     {
         bool isEndOfTemplate = false;
 
-        if(!writingContent && line.StartsWith(GetKeywordOrDefault(Language.SET_VARIABLE), StringComparison.InvariantCultureIgnoreCase))
+        if (!writingContent && line.StartsWith(GetKeywordOrDefault(Language.SET_VARIABLE), StringComparison.InvariantCultureIgnoreCase))
         {
             var setCommandBody = line[line.LastIndexOf('-')..];
             var commandSeparatorIndex = setCommandBody.IndexOf(":");
@@ -116,12 +116,12 @@ public partial record DefaultTemplate : ITemplate
             var setCommandParameters = setCommandBody[(commandSeparatorIndex + 1)..];
 
             this.ProcessVariable(setCommandName, setCommandParameters);
-        } 
+        }
 
         else if (!writingContent && line.StartsWith(GetKeywordOrDefault(Language.DEFINE_TEMPLATE), StringComparison.InvariantCultureIgnoreCase))
         {
             Type = TemplateType.InMemoryTemplate;
-            TemplateName = line[(line.LastIndexOf(":") + 1)..];   
+            TemplateName = line[(line.LastIndexOf(":") + 1)..];
         }
 
         else if (!writingContent && line.StartsWith(GetKeywordOrDefault(Language.DEFINE_PATH), StringComparison.InvariantCultureIgnoreCase))
@@ -164,19 +164,18 @@ public partial record DefaultTemplate : ITemplate
         }
         else if (writingContent)
         {
-            if (UsedTemplates.Count > 0)
+            if (UsedTemplates.Count > 0 
+                && line.StartsWith(GetKeywordOrDefault(Language.SET_VARIABLE, "#"), StringComparison.InvariantCultureIgnoreCase))
             {
-                if (line.StartsWith(GetKeywordOrDefault(Language.SET_VARIABLE, "#"), StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var variableDefinition = line[(line.LastIndexOf(':') + 1)..];
+                var variableDefinition = line[(line.LastIndexOf(':') + 1)..];
 
-                    var lastIndex = variableDefinition.LastIndexOf('=');
-                    Variables.Add(
-                        variableDefinition[..lastIndex],
-                        variableDefinition[(lastIndex + 1)..]);
-                }
+                var lastIndex = variableDefinition.LastIndexOf('=');
+                Variables.Add(
+                    variableDefinition[..lastIndex],
+                    variableDefinition[(lastIndex + 1)..]);
+
             }
-            else if (line.StartsWith(GetKeywordOrDefault(Language.USE_TEMPLATE,"##"), StringComparison.InvariantCultureIgnoreCase))
+            else if (line.StartsWith(GetKeywordOrDefault(Language.USE_TEMPLATE, "##"), StringComparison.InvariantCultureIgnoreCase))
             {
                 UsedTemplates.Add(line[(line.LastIndexOf(':') + 1)..]);
             }
