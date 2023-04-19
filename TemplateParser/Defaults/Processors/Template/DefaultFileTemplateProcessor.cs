@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.FileProviders;
-using TemplateParser.Contracts;
+﻿using TemplateParser.Contracts;
 
 namespace TemplateParser.Defaults.Processors.Template;
 
@@ -11,6 +10,8 @@ public class DefaultFileTemplateProcessor : DefaultFilePathTemplateProcessor
     {
         
     }
+
+    public IFileOperation FileOperation { set =>  fileOperation = value; }
 
     public override async Task Process(ITemplate template, CancellationToken cancellationToken)
     {

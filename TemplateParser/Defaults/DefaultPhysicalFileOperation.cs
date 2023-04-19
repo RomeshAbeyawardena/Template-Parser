@@ -7,6 +7,8 @@ public class DefaultPhysicalFileOperation : IFileOperation
 {
     private readonly IFileProvider? fileProvider;
 
+    protected IFileProvider? FileProvider => fileProvider;
+
     protected virtual void Dispose()
     {
         (fileProvider as IDisposable)?.Dispose();
@@ -45,6 +47,9 @@ public class DefaultPhysicalFileOperation : IFileOperation
     public string? Path { get; protected set; }
     public virtual string? Content { get; set; }
     public string? FullName { get; protected set; }
+    
+    public Stream ReadStream => (fileProvider ?? throw new NullReferenceException())
+        .GetFileInfo(FullName ?? throw new NullReferenceException()).CreateReadStream();
 
     public virtual Task Create(CancellationToken cancellationToken)
     {

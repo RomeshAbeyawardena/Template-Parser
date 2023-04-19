@@ -27,6 +27,8 @@ public class DefaultFilePathTemplateProcessor : BaseTemplateProcessor
         
     }
 
+    public IDirectoryOperation DirectoryOperation { set => directoryOperation = value; }
+
     public override Task Process(ITemplate template, CancellationToken cancellationToken)
     {
         
