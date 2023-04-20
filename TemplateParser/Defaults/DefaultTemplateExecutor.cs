@@ -33,7 +33,7 @@ public class DefaultTemplateExecutor : ITemplateExecutor
                 .OrderByDescending(t => t.OrderIndex);
             foreach(var processor in processors)
             {
-                if (processor.GlobalVariables != null)
+                if (processor.GlobalVariables == null)
                 {
                     processor.GlobalVariables = globalVariables;
                 }

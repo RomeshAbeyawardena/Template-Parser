@@ -9,6 +9,7 @@ public class DefaultFileTemplateProcessor : DefaultFilePathTemplateProcessor
     public DefaultFileTemplateProcessor()
     {
         Type = TemplateType.FileTemplate;
+        OrderIndex = 10;
     }
 
     public IFileOperation FileOperation { set =>  fileOperation = value; }
@@ -16,7 +17,7 @@ public class DefaultFileTemplateProcessor : DefaultFilePathTemplateProcessor
     public override async Task Process(ITemplate template, CancellationToken cancellationToken)
     {
         await base.Process(template, cancellationToken);
-
+        Console.WriteLine("Processing {0}", template);
         if (!string.IsNullOrWhiteSpace(TargetDirectory) 
                 && !string.IsNullOrWhiteSpace(template.FileName))
         {

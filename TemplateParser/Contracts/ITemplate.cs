@@ -8,5 +8,5 @@ public interface ITemplate
     string? Path { get; }
     string? FileName { get;}
     string? Content { get; }
-    TemplateType Type { get; }
+    TemplateType? Type { get; }
 }

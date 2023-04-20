@@ -94,7 +94,7 @@ public partial record DefaultTemplate : ITemplate
     public string? Path { get; set; }
     public string? FileName { get; set; }
     public string? Content { get; set; }
-    public TemplateType Type { get; set; }
+    public TemplateType? Type { get; set; }
 
     /// <summary>
     /// Parses current line into template format
@@ -126,13 +126,20 @@ public partial record DefaultTemplate : ITemplate
 
         else if (!writingContent && line.StartsWith(GetKeywordOrDefault(Language.DEFINE_PATH), StringComparison.InvariantCultureIgnoreCase))
         {
-            Type = TemplateType.FilePathTemplate;
+            if (!Type.HasValue)
+            {
+                Type = TemplateType.FilePathTemplate;
+            }
             Path = line[(line.LastIndexOf(":") + 1)..];
         }
 
         else if (!writingContent && line.StartsWith(GetKeywordOrDefault(Language.DEFINE_FILENAME), StringComparison.InvariantCultureIgnoreCase))
         {
-            Type = TemplateType.FileTemplate;
+            if (!Type.HasValue)
+            {
+                Type = TemplateType.FileTemplate;
+            }
+
             FileName = line[(line.LastIndexOf(":") + 1)..];
         }
 

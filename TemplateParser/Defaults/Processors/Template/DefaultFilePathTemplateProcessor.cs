@@ -22,7 +22,7 @@ public class DefaultFilePathTemplateProcessor : BaseTemplateProcessor
     }
 
     public DefaultFilePathTemplateProcessor()
-        : base(TemplateType.FilePathTemplate)
+        : base(TemplateType.FilePathTemplate, 20)
     {
         
     }
@@ -31,11 +31,11 @@ public class DefaultFilePathTemplateProcessor : BaseTemplateProcessor
 
     public override Task Process(ITemplate template, CancellationToken cancellationToken)
     {
-        
+        Console.WriteLine("Processing {0}", template);
         if (!string.IsNullOrWhiteSpace(TargetDirectory) 
             && !string.IsNullOrWhiteSpace(template.Path))
         {
-            directoryOperation ??= new DefaultPhysicalDirectoryOperation(Path.Combine(template.Path));
+            directoryOperation ??= new DefaultPhysicalDirectoryOperation(Path.Combine(TargetDirectory, template.Path));
             
             if (!directoryOperation.Exists)
             {

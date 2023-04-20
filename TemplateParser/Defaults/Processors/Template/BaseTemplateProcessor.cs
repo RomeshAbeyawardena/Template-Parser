@@ -25,7 +25,7 @@ public abstract class BaseTemplateProcessor : ITemplateProcessor
 
     public virtual bool CanProcess(ITemplate template)
     {
-        return Type.HasFlag(template.Type);
+        return template.Type.HasValue && Type.HasFlag(template.Type);
     }
 
     public BaseTemplateProcessor(TemplateType type, int orderIndex = int.MinValue)
@@ -34,7 +34,7 @@ public abstract class BaseTemplateProcessor : ITemplateProcessor
         OrderIndex = orderIndex;
     }
 
-    public int OrderIndex { get; }
+    public int OrderIndex { get; protected set; }
     public TemplateType Type { get; protected set; }
     public IDictionary<string, string>? GlobalVariables { get => globalVariables; set => OnGlobalVariablesUpdated(value); }
     TemplateType ITemplateProcessor.Type { get; }
