@@ -1,5 +1,5 @@
-SET-BASE_PATH:C:\Dev\Test\Crm
-SET-GLOBAL_VAR:app=Crm;lang=vb;Timeout=1000
+SET-BASE_PATH:C:\Dev\Test
+SET-GLOBAL_VAR:app=Crm;lang=vb;Timeout=1000;feature=Customer
 
 Define:Test
 #BEGIN TEMPLATE#
@@ -20,7 +20,7 @@ public class MappingProfile : Profile
 }
 #END TEMPLATE#
 
-Path:$app
+Path:$app\$feature
 File:DeleteRequest.cs
 #BEGIN TEMPLATE#
 using Mediatr;
