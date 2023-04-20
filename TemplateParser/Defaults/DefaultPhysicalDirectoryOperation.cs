@@ -17,7 +17,7 @@ public class DefaultPhysicalDirectoryOperation : DefaultPhysicalFileOperation, I
         Exists = directoryInfo.Exists;
         IsFile = false;
         Name = directoryInfo.Name;
-        var lastDirIndex = directoryInfo.FullName.LastIndexOf(IOPath.PathSeparator);
+        var lastDirIndex = directoryInfo.FullName.LastIndexOf(IOPath.DirectorySeparatorChar);
         Path = directoryInfo.FullName[..lastDirIndex];
         FullName = directoryInfo.FullName;
     }

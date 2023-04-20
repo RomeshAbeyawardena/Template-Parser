@@ -4,10 +4,10 @@ namespace TemplateParser.Defaults;
 
 public class DefaultTemplateParser : ITemplateParser
 {
-    private readonly IDictionary<string, string> globalVariables;
+    private readonly IGlobalVariables globalVariables;
     private readonly IConfig config;
 
-    public DefaultTemplateParser(IDictionary<string, string> globalVariables, IConfig config)
+    public DefaultTemplateParser(IGlobalVariables globalVariables, IConfig config)
     {
         this.globalVariables = globalVariables;
         this.config = config;

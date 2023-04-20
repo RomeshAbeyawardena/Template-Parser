@@ -5,10 +5,10 @@ namespace TemplateParser.Defaults;
 public class DefaultTemplateExecutor : ITemplateExecutor
 {
     private readonly IEnumerable<ITemplateProcessor> templateProcessors;
-    private readonly IDictionary<string, string> globalVariables;
+    private readonly IGlobalVariables globalVariables;
 
     public DefaultTemplateExecutor(IEnumerable<ITemplateProcessor> templateProcessors,
-        IDictionary<string, string> globalVariables)
+        IGlobalVariables globalVariables)
     {
         this.templateProcessors = templateProcessors;
         this.globalVariables = globalVariables;

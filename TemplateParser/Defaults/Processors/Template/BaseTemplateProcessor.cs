@@ -4,7 +4,7 @@ namespace TemplateParser.Defaults.Processors.Template;
 
 public abstract class BaseTemplateProcessor : ITemplateProcessor
 {
-    private IDictionary<string, string>? globalVariables;
+    private IGlobalVariables? globalVariables;
     public abstract Task Process(ITemplate template, CancellationToken cancellationToken);
 
     protected virtual void Dispose()
@@ -18,7 +18,7 @@ public abstract class BaseTemplateProcessor : ITemplateProcessor
         GC.SuppressFinalize(this);
     }
 
-    protected virtual void OnGlobalVariablesUpdated(IDictionary<string, string>? globalVariables)
+    protected virtual void OnGlobalVariablesUpdated(IGlobalVariables? globalVariables)
     {
         this.globalVariables = globalVariables;
     }
@@ -36,6 +36,6 @@ public abstract class BaseTemplateProcessor : ITemplateProcessor
 
     public int OrderIndex { get; protected set; }
     public TemplateType Type { get; protected set; }
-    public IDictionary<string, string>? GlobalVariables { get => globalVariables; set => OnGlobalVariablesUpdated(value); }
+    public IGlobalVariables? GlobalVariables { get => globalVariables; set => OnGlobalVariablesUpdated(value); }
     TemplateType ITemplateProcessor.Type { get; }
 }

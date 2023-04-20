@@ -2,7 +2,7 @@
 
 public interface ITemplate
 {
-    IDictionary<string, string> Variables { get; }
+    IGlobalVariables Variables { get; }
     IList<string> UsedTemplates { get; set; }
     string? TemplateName { get; }
     string? Path { get; }

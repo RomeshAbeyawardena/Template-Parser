@@ -9,7 +9,7 @@ public static class TemplateParserHelper
 {
     public static IEnumerable<ITemplate> Parse(Stream stream, 
         ITemplateParser? templateParser = null,
-        IDictionary<string, string>? globalVariables = null,
+        IGlobalVariables? globalVariables = null,
         IConfig? config = null) 
     {
         templateParser ??= new DefaultTemplateParser(globalVariables ?? throw new ArgumentNullException(nameof(globalVariables)),
@@ -20,7 +20,7 @@ public static class TemplateParserHelper
 
     public static IEnumerable<ITemplate> Parse(string template, 
         ITemplateParser? templateParser = null,
-        IDictionary<string, string>? globalVariables = null,
+        IGlobalVariables? globalVariables = null,
         IConfig? config = null)
     {
         templateParser ??= new DefaultTemplateParser(globalVariables ?? throw new ArgumentNullException(nameof(globalVariables)),
@@ -32,7 +32,7 @@ public static class TemplateParserHelper
     public static IEnumerable<ITemplate> ParseFromFile(IFileProvider fileProvider, 
         string fileName, 
         ITemplateParser? templateParser = null,
-        IDictionary<string, string>? globalVariables = null,
+        IGlobalVariables? globalVariables = null,
         IConfig? config = null)
     {
         templateParser ??= new DefaultTemplateParser(globalVariables ?? throw new ArgumentNullException(nameof(globalVariables)), config ?? throw new ArgumentNullException(nameof(config)));

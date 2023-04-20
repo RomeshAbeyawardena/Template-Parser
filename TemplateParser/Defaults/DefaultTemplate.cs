@@ -9,7 +9,7 @@ public partial record DefaultTemplate : ITemplate
 {
     private bool writingContent = false;
     private readonly IEnumerable<ITemplate> templateItems;
-    private readonly IDictionary<string, string> globalVariables;
+    private readonly IGlobalVariables globalVariables;
     private readonly IConfig config;
     private readonly StringBuilder contentBuilder;
     private IDictionary<string, string> currentLanguage;
@@ -41,7 +41,7 @@ public partial record DefaultTemplate : ITemplate
                 }
                 break;
             case CommandVariables.COMMAND_BASE_PATH:
-                globalVariables.AddOrUpdate(command, parameters);
+                globalVariables[command] = parameters;
                 break;
             case CommandVariables.COMMAND_GLOBAL_VAR:
                 foreach (var parameter in parameters.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
@@ -49,46 +49,40 @@ public partial record DefaultTemplate : ITemplate
                     var parameterSeparatorIndex = parameter.IndexOf('=');
                     var parameterName = parameter[..parameterSeparatorIndex];
                     var parameterValue = parameter[(parameterSeparatorIndex + 1)..];
-                    globalVariables.AddOrUpdate(parameterName, parameterValue);
+                    globalVariables[parameterName] = parameterValue;
                 }
                 break;
         }
     }
 
-    private string ReplaceVariables(string content, IDictionary<string, string> variables)
+    private string ReplaceVariables(string content, IGlobalVariables variables)
     {
-        var templateContent = content;
-        foreach (var (k, v) in variables)
-        {
-            templateContent = templateContent.Replace(k, v);
-        }
+        var templateContent = variables.ReplaceWithVariables(content);
 
-        foreach (var (k, v) in globalVariables)
-        {
-            templateContent = templateContent.Replace($"${k}", v);
-        }
+        templateContent = globalVariables.ReplaceWithVariables(templateContent);
+
         return templateContent;
     }
 
-    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables, IConfig config)
+    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IGlobalVariables globalVariables, IConfig config)
     {
         this.contentBuilder = new();
         this.templateItems = templateItems;
         this.globalVariables = globalVariables;
         this.config = config;
-        Variables = new Dictionary<string, string>();
+        Variables = new DefaultGlobalVariables("$");
         currentLanguage = new Dictionary<string, string>();
         UsedTemplates = new List<string>();
     }
 
-    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IDictionary<string, string> globalVariables, ITemplate? previousTemplate, IConfig config)
+    public DefaultTemplate(IEnumerable<ITemplate> templateItems, IGlobalVariables globalVariables, ITemplate? previousTemplate, IConfig config)
         : this(templateItems, globalVariables, config)
     {
         Path = previousTemplate?.Path;
         FileName = previousTemplate?.FileName;
     }
 
-    public IDictionary<string, string> Variables { get; set; }
+    public IGlobalVariables Variables { get; set; }
     public IList<string> UsedTemplates { get; set; }
     public string? TemplateName { get; set; }
     public string? Path { get; set; }
@@ -177,9 +171,8 @@ public partial record DefaultTemplate : ITemplate
                 var variableDefinition = line[(line.LastIndexOf(':') + 1)..];
 
                 var lastIndex = variableDefinition.LastIndexOf('=');
-                Variables.Add(
-                    variableDefinition[..lastIndex],
-                    variableDefinition[(lastIndex + 1)..]);
+                Variables[variableDefinition[..lastIndex]] =
+                    variableDefinition[(lastIndex + 1)..];
 
             }
             else if (line.StartsWith(GetKeywordOrDefault(Language.USE_TEMPLATE, "##"), StringComparison.InvariantCultureIgnoreCase))

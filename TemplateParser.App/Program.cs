@@ -16,7 +16,7 @@ var config = new DefaultConsoleConfig(new ConfigurationBuilder()
 string? directoryName;
 IEnumerable<ITemplate> templates = Array.Empty<ITemplate>();
 Console.WriteLine(AppContext.BaseDirectory);
-var globalVariables = new ConcurrentDictionary<string, string>();
+var globalVariables = new DefaultGlobalVariables("$");
 if (!string.IsNullOrWhiteSpace(config.Input) && !string.IsNullOrWhiteSpace(directoryName = Path.GetDirectoryName(config.Input)))
 {
     Console.WriteLine(directoryName);

@@ -8,12 +8,12 @@ public class DefaultFilePathTemplateProcessor : BaseTemplateProcessor
     private IDirectoryOperation? directoryOperation;
     protected string? TargetDirectory => directory;
     
-    protected override void OnGlobalVariablesUpdated(IDictionary<string, string>? globalVariables)
+    protected override void OnGlobalVariablesUpdated(IGlobalVariables? globalVariables)
     {
         directory = Environment.CurrentDirectory;
 
         if (globalVariables != null
-            && globalVariables.TryGetValue(CommandVariables.COMMAND_BASE_PATH, out var basePath))
+            && globalVariables.TryGetValue($"{CommandVariables.COMMAND_BASE_PATH}", out var basePath))
         {
             directory = basePath;
         }
@@ -32,10 +32,11 @@ public class DefaultFilePathTemplateProcessor : BaseTemplateProcessor
     public override Task Process(ITemplate template, CancellationToken cancellationToken)
     {
         Console.WriteLine("Processing {0}", template);
-        if (!string.IsNullOrWhiteSpace(TargetDirectory) 
+        if (GlobalVariables != null 
+            && !string.IsNullOrWhiteSpace(directory) 
             && !string.IsNullOrWhiteSpace(template.Path))
         {
-            directoryOperation ??= new DefaultPhysicalDirectoryOperation(Path.Combine(TargetDirectory, template.Path));
+            directoryOperation ??= new DefaultPhysicalDirectoryOperation(Path.Combine(directory, GlobalVariables.ReplaceWithVariables(template.Path)));
             
             if (!directoryOperation.Exists)
             {
